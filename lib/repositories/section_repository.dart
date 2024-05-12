@@ -18,7 +18,7 @@ class SectionRepository implements ISectionRepository {
 
   @override
   List<SectionDTO> initialiseSections() {
-    var temp = [
+    sectionDTOs = [
       SectionDTO(
         id: staticIdCounter++,
         color: Colors.yellow,
@@ -50,8 +50,6 @@ class SectionRepository implements ISectionRepository {
         svgIconPath: '${iconPathBase}blouse.svg',
       ),
     ];
-    sectionDTOs = [];
-    sectionDTOs!.addAll(temp);
     return sectionDTOs!;
   }
 
