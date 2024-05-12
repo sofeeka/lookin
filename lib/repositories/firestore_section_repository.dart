@@ -1,16 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lookin_empat/models/section_dto.dart';
 
-const FIREBASE_SECTIONS_REF = "sections";
+class FirestoreSectionRepository {
+  static const FIREBASE_TABLE_REF = "sections";
 
-class FirestoreSectionService {
   final _firestore = FirebaseFirestore.instance;
-
   late final CollectionReference _sectionsRef;
 
-  FirestoreSectionService() {
+  FirestoreSectionRepository() {
     _sectionsRef =
-        _firestore.collection(FIREBASE_SECTIONS_REF).withConverter<SectionDTO>(
+        _firestore.collection(FIREBASE_TABLE_REF).withConverter<SectionDTO>(
             fromFirestore: (snapshots, _) => SectionDTO.fromJson(
                   snapshots.data()!,
                 ),
@@ -21,15 +20,15 @@ class FirestoreSectionService {
     return _sectionsRef.snapshots();
   }
 
-  void addSection(SectionDTO section) async {
-    _sectionsRef.add(section);
+  void addSection(SectionDTO dto) async {
+    _sectionsRef.add(dto);
   }
 
-  void updateSection(String todoId, SectionDTO section) {
-    _sectionsRef.doc(todoId).update(section.toJson());
+  void updateSection(int id, SectionDTO dto) {
+    _sectionsRef.doc(id.toString()).update(dto.toJson());
   }
 
-  void deleteSection(String sectionId) {
-    _sectionsRef.doc(sectionId).delete();
+  void deleteSection(int id) {
+    _sectionsRef.doc(id.toString()).delete();
   }
 }
