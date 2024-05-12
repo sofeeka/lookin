@@ -4,11 +4,19 @@ import 'package:lookin_empat/screens/add_new_look_screen.dart';
 import 'package:lookin_empat/screens/feed_screen.dart';
 import 'package:lookin_empat/screens/liked_looks_screen.dart';
 import 'package:lookin_empat/screens/profile_screen.dart';
-import 'package:lookin_empat/screens/search_screen.dart';
 import 'package:lookin_empat/screens/sections_screen.dart';
 import 'package:lookin_empat/style/theme.dart';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(const MyApp());
 }
 
