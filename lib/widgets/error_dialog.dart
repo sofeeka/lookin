@@ -29,7 +29,10 @@ class ErrorDialog extends StatelessWidget {
     );
   }
 
-  static void show(BuildContext context, String errorMessage) {
+  static void show({
+    required BuildContext context,
+    required String errorMessage,
+  }) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
