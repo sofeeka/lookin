@@ -1,15 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lookin_empat/models/section_dto.dart';
 import 'package:lookin_empat/repositories/section_repository.dart';
 
 import '../models/logger.dart';
-import '../widgets/section_widget.dart';
 import 'i_section_repository.dart';
 
 class FirestoreSectionRepository implements ISectionRepository {
   static const FIREBASE_TABLE_REF = "sections";
-
+  static bool initialised = false;
   final _firestore = FirebaseFirestore.instance;
   late final CollectionReference _collectionRef;
 
@@ -34,7 +32,6 @@ class FirestoreSectionRepository implements ISectionRepository {
 
     Map<String, dynamic> modelData = model.toJson();
     await localCollectionRef.doc(model.id.toString()).set(modelData);
-    // _collectionRef.add(model);
   }
 
   @override
@@ -81,6 +78,10 @@ class FirestoreSectionRepository implements ISectionRepository {
 
   @override
   List<SectionDTO> initialiseSections() {
+    if(initialised) {
+      return [];
+    }
+
     final rep = HardCodedSectionRepository();
 
     var sections = rep.initialiseSections();
@@ -88,6 +89,23 @@ class FirestoreSectionRepository implements ISectionRepository {
       add(section);
     }
 
+    initialised = true;
+
     return sections;
+  }
+
+  @override
+  Future<int?> getMaxId() async {
+    try {
+      var querySnapshot = await _collectionRef.orderBy('id', descending: true).limit(1).get();
+      if (querySnapshot.docs.isNotEmpty) {
+        return querySnapshot.docs.first.get('id') as int?;
+      } else {
+        return null; // No documents found
+      }
+    } catch (error) {
+      Logger.log('Error fetching max ID: $error');
+      return null;
+    }
   }
 }

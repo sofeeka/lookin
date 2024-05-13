@@ -12,4 +12,5 @@ abstract class ISectionRepository {
   List<SectionDTO> initialiseSections();
   Future<SectionDTO?> getByID(int id);
   Future<SectionDTO?> getByIndex(int i);
+  Future<int?> getMaxId();
 }

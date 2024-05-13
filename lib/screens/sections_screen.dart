@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:flutter_svg/svg.dart';
 
 import '../base_app_bar.dart';
 import '../models/logger.dart';
@@ -17,10 +18,12 @@ class SectionsScreen extends StatefulWidget {
     super.key,
     this.onPressedActive = false,
     this.onSectionPressed,
+    this.leftAppBarWidget,
   });
 
   final bool onPressedActive;
   final Function(int)? onSectionPressed;
+  final Widget? leftAppBarWidget;
 
   @override
   _SectionsScreenState createState() => _SectionsScreenState();
@@ -46,6 +49,7 @@ class _SectionsScreenState extends State<SectionsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: BaseAppBar(
+        leftWidget: widget.leftAppBarWidget,
         onRightWidgetPressed: openSectionBox,
       ),
       body: FutureBuilder<QuerySnapshot>(
@@ -76,6 +80,20 @@ class _SectionsScreenState extends State<SectionsScreen> {
           }
         },
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          setState(() {
+            var frs = FirestoreSectionRepository();
+            frs.initialiseSections();
+          });
+        },
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        child: SvgPicture.asset(
+          "lib/assets/icons/light-bulb.svg",
+          color: Theme.of(context).iconTheme.color,
+          width: 35,
+        ),
+      ),
     );
   }
 
@@ -98,7 +116,11 @@ class _SectionsScreenState extends State<SectionsScreen> {
   }
 
   // Function to open section dialog
-  void openSectionBox() {
+  void openSectionBox() async {
+
+    int maxId = await sectionRepository.getMaxId() ?? 1;
+    int newSectionId = maxId + 1;
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -117,12 +139,14 @@ class _SectionsScreenState extends State<SectionsScreen> {
           ElevatedButton(
             onPressed: () {
               SectionDTO section = SectionDTO(
-                id: 10, // TODO get max id + 1
+                id: newSectionId,
                 color: Colors.red, // TODO use flutter_colorpicker
                 name: textController.text,
                 iconData: Icons.bug_report, // TODO choose icon
               );
-              sectionRepository.add(section);
+              setState(() {
+                sectionRepository.add(section);
+              });
               Navigator.pop(context);
             },
             child: const Text("Add"),
