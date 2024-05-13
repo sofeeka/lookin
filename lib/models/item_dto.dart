@@ -6,25 +6,24 @@ class ItemDTO {
 
   ItemDTO.fromJson(Map<String, Object?> json)
       : this(
-    id: json['id']! as int,
-    imagePath: json['imagePath']! as String,
-  );
+          id: json['id']! as int,
+          imagePath: json['imagePath']! as String,
+        );
 
   ItemDTO copyWith({
     int? id,
     String? imagePath,
   }) {
     return ItemDTO(
-        id: id ?? this.id,
-        imagePath: imagePath ?? this.imagePath
+      id: id ?? this.id,
+      imagePath: imagePath ?? this.imagePath,
     );
   }
 
-  //todo optional add iconData
   Map<String, Object?> toJson() {
     return {
       'id': id,
-      'imagePath' : imagePath,
+      'imagePath': imagePath,
     };
   }
 

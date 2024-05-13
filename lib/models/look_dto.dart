@@ -9,7 +9,8 @@ class LookDTO {
 
   factory LookDTO.fromJson(Map<String, Object?> json) {
     var itemsJson = json['items'] as List<dynamic>;
-    List<ItemDTO> items = itemsJson.map((itemJson) => ItemDTO.fromJson(itemJson)).toList();
+    List<ItemDTO> items =
+        itemsJson.map((itemJson) => ItemDTO.fromJson(itemJson)).toList();
 
     return LookDTO(
       id: json['id']! as int,
@@ -24,13 +25,15 @@ class LookDTO {
     List<ItemDTO>? items,
   }) {
     return LookDTO(
-        id: id ?? this.id,
-        name: name ?? this.name,
-        items: items ?? this.items);
+      id: id ?? this.id,
+      name: name ?? this.name,
+      items: items ?? this.items,
+    );
   }
 
   Map<String, Object?> toJson() {
-    List<Map<String, Object?>> itemsJson = items.map((item) => item.toJson()).toList();
+    List<Map<String, Object?>> itemsJson =
+        items.map((item) => item.toJson()).toList();
 
     return {
       'id': id,
