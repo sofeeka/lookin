@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lookin_empat/custom_bottom_navigation_bar.dart';
 import 'package:lookin_empat/screens/add_new_look_screen.dart';
+import 'package:lookin_empat/screens/auth/widget_tree.dart';
 import 'package:lookin_empat/screens/feed_screen.dart';
 import 'package:lookin_empat/screens/liked_looks_screen.dart';
 import 'package:lookin_empat/screens/profile_screen.dart';
@@ -17,11 +18,14 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  runApp(const MyApp());
+  runApp(const MaterialApp(
+    debugShowCheckedModeBanner: false,
+    home: WidgetTree(),
+  ));
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -32,10 +36,10 @@ class _MyAppState extends State<MyApp> {
 
   final List<Widget> screens = [
     const FeedScreen(),
-    SectionsScreen(),
+    const SectionsScreen(),
     const AddNewLookScreen(),
     const SavedLooksScreen(),
-    const ProfileScreen(),
+    ProfileScreen(),
   ];
 
   @override
