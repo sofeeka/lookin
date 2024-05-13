@@ -1,7 +1,10 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:lookin_empat/style/colors.dart';
 
 import '../base_app_bar.dart';
 import '../models/logger.dart';
@@ -36,7 +39,7 @@ class _SectionsScreenState extends State<SectionsScreen> {
   Function()? onAddButtonPressed;
 
   Future<List<SectionWidget>>? futureSections;
-  final TextEditingController textController = TextEditingController();
+  final TextEditingController sectionNameController = TextEditingController();
 
   @override
   void initState() {
@@ -49,9 +52,8 @@ class _SectionsScreenState extends State<SectionsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: BaseAppBar(
-        leftWidget: widget.leftAppBarWidget,
-        onRightWidgetPressed: openSectionBox,
-      ),
+          leftWidget: widget.leftAppBarWidget,
+          onRightWidgetPressed: openSectionBox),
       body: FutureBuilder<QuerySnapshot>(
         future: sectionRepository.getAll(),
         builder: (context, snapshot) {
@@ -115,43 +117,87 @@ class _SectionsScreenState extends State<SectionsScreen> {
     );
   }
 
-  // Function to open section dialog
   void openSectionBox() async {
 
-    int maxId = await sectionRepository.getMaxId() ?? 1;
+    // 5 first ids for basic hardcoded sections
+    // in /lib/repositories/hardcoded_section_repository.dart
+    // used to init when user presses light-bulb button
+    int maxId = max(await sectionRepository.getMaxId() ?? 0, 5);
     int newSectionId = maxId + 1;
 
-    showDialog(
+    showBottomSheet(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("Add Section"),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
+      builder: (context) => Container(
+        height: MediaQuery.of(context).size.height * 0.8,
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+          ),
+        ),
+        child: Column(
           children: [
-            TextField(
-              controller: textController,
-              decoration: const InputDecoration(labelText: "Name"),
+            Center(
+              child: Text(
+                "Category",
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w900),
+              ),
             ),
-            const SizedBox(height: 16),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const SizedBox(height: 20),
+                SizedBox(
+                  height: 48,
+                  child: TextField(
+                    controller: sectionNameController,
+                    decoration: const InputDecoration(labelText: "Name"),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Icon",
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.assignment_late_outlined),
+                      onPressed: () {
+                      },
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Color",
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    SectionDTO section = SectionDTO(
+                      id: newSectionId,
+                      color: CColors.red, // Todo: Use color_picker
+                      name: sectionNameController.text,
+                      svgIconPath:
+                          "lib/assets/icons/not_found.svg", // Todo: Let user choose an icon
+                    );
+                    sectionRepository.add(section);
+                  },
+                  child: const Text("Add"),
+                ),
+              ],
+            ),
           ],
         ),
-        actions: [
-          ElevatedButton(
-            onPressed: () {
-              SectionDTO section = SectionDTO(
-                id: newSectionId,
-                color: Colors.red, // TODO use flutter_colorpicker
-                name: textController.text,
-                iconData: Icons.bug_report, // TODO choose icon
-              );
-              setState(() {
-                sectionRepository.add(section);
-              });
-              Navigator.pop(context);
-            },
-            child: const Text("Add"),
-          )
-        ],
       ),
     );
   }
