@@ -1,12 +1,16 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:lookin_empat/widgets/coming_soon.dart';
+
+import '../base_app_bar.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text("Profile"),
+    return const Scaffold(
+      appBar: BaseAppBar(),
+      body: ComingSoon(),
     );
   }
 }
