@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lookin_empat/models/section_dto.dart';
-import 'package:lookin_empat/repositories/section_repository.dart';
+import 'package:lookin_empat/repositories/hardcoded_section_repository.dart';
 
 import '../models/logger.dart';
 import 'i_section_repository.dart';

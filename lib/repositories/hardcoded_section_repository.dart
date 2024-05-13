@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lookin_empat/repositories/i_section_repository.dart';
 import '../models/section_dto.dart';
+import '../style/colors.dart';
 
 class HardCodedSectionRepository /*implements ISectionRepository*/ {
   static int staticIdCounter = 1;
@@ -21,31 +22,31 @@ class HardCodedSectionRepository /*implements ISectionRepository*/ {
     sectionDTOs = [
       SectionDTO(
         id: staticIdCounter++,
-        color: Colors.yellow,
+        color: CColors.yellow,
         name: 'T-shirts',
         svgIconPath: '${iconPathBase}t-shirt.svg',
       ),
       SectionDTO(
         id: staticIdCounter++,
-        color: Colors.green,
+        color: CColors.green,
         name: 'Shorts',
         svgIconPath: '${iconPathBase}shorts.svg',
       ),
       SectionDTO(
         id: staticIdCounter++,
-        color: Colors.red,
+        color: CColors.red,
         name: 'Caps',
         svgIconPath: '${iconPathBase}cap.svg',
       ),
       SectionDTO(
         id: staticIdCounter++,
-        color: Colors.blue,
+        color: CColors.blue,
         name: 'Beanies',
         svgIconPath: '${iconPathBase}beanie.svg',
       ),
       SectionDTO(
         id: staticIdCounter++,
-        color: Colors.yellow,
+        color: CColors.teal,
         name: 'Blouses',
         svgIconPath: '${iconPathBase}blouse.svg',
       ),
