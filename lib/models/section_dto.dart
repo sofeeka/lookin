@@ -1,4 +1,6 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class SectionDTO {
   SectionDTO({
@@ -11,14 +13,19 @@ class SectionDTO {
     assert(iconData != null || svgIconPath != null);
   }
 
-  //todo optional add iconData
-  SectionDTO.fromJson(Map<String, dynamic> json)
-      : this(
-          id: json['id']! as int,
-          name: json['name']! as String,
-          color: Color(json['color']! as int),
-          svgIconPath: (json['svgIconPath'] ?? '') as String,
-        );
+  factory SectionDTO.fromJson(Map<String, dynamic> json) {
+    IconData? iconData =
+        isSVGPathValid(json['svgIconPath']) ? null : Icons.error;
+    return SectionDTO(
+      id: json['id']! as int,
+      name: json['name']! as String,
+      color: Color(json['color']! as int),
+      svgIconPath: (json['svgIconPath']) == null
+          ? null
+          : (json['svgIconPath']) as String,
+      iconData: iconData,
+    );
+  }
 
   SectionDTO copyWith({
     int? id,
@@ -52,4 +59,13 @@ class SectionDTO {
   // svgIcon will be selected if both svgIconPath and iconData are defined
   final String? svgIconPath;
   final IconData? iconData;
+
+  static bool isSVGPathValid(String? svgPath) {
+    try {
+      SvgPicture.string(svgPath!);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 }

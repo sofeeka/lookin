@@ -101,7 +101,7 @@ class FirestoreSectionRepository implements ISectionRepository {
       if (querySnapshot.docs.isNotEmpty) {
         return querySnapshot.docs.first.get('id') as int?;
       } else {
-        return null; // No documents found
+        return null;
       }
     } catch (error) {
       Logger.log('Error fetching max ID: $error');
