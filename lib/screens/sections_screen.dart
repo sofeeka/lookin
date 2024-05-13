@@ -3,7 +3,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:lookin_empat/base_app_bar.dart';
 import 'package:lookin_empat/repositories/i_section_repository.dart';
 import 'package:lookin_empat/repositories/section_repository.dart';
-import 'package:lookin_empat/services/firestore_section_service.dart';
+import 'package:lookin_empat/repositories/firestore_section_repository.dart';
 import 'package:lookin_empat/services/section_service.dart';
 
 import '../models/logger.dart';
@@ -29,8 +29,8 @@ class _SectionsScreenState extends State<SectionsScreen> {
   late ISectionRepository sectionRepository;
   Function()? onAddButtonPressed;
 
-  final FirestoreSectionService firestoreSectionService =
-      FirestoreSectionService();
+  final FirestoreSectionRepository firestoreSectionService =
+      FirestoreSectionRepository();
   final TextEditingController textController = TextEditingController();
 
   // add section
@@ -64,7 +64,7 @@ class _SectionsScreenState extends State<SectionsScreen> {
                 name: textController.text,
                 iconData: Icons.bug_report, // TODO choose icon
               );
-              firestoreSectionService.addSection(section);
+              firestoreSectionService.add(section);
               Navigator.pop(context);
             },
             child: const Text("Add"),
@@ -76,7 +76,7 @@ class _SectionsScreenState extends State<SectionsScreen> {
 
   @override
   void initState() {
-    sectionRepository = SectionRepository();
+    sectionRepository = FirestoreSectionRepository();
     sectionService = SectionService(sectionRepository);
 
     onAddButtonPressed = () => {

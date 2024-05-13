@@ -15,11 +15,11 @@ class SectionService implements ISectionService{
     Function(int)? onPressed,
   }) {
 
-    if (SectionRepository.sectionDTOs == null) {
+    if (HardCodedSectionRepository.sectionDTOs == null) {
       _sectionRepository.initialiseSections();
     }
 
-    return SectionRepository.sectionDTOs!
+    return HardCodedSectionRepository.sectionDTOs!
         .map(
           (dto) => SectionWidget(
             sectionDTO: dto,

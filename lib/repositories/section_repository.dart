@@ -1,13 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lookin_empat/repositories/i_section_repository.dart';
 import '../models/section_dto.dart';
 
-class SectionRepository implements ISectionRepository {
+class HardCodedSectionRepository /*implements ISectionRepository*/ {
   static int staticIdCounter = 1;
   static List<SectionDTO>? sectionDTOs;
 
   static const String iconPathBase = 'lib/assets/icons/section/';
-  static const double defaultWidth = 50;
 
   static SectionDTO errorDTO = SectionDTO(
     id: 0,
@@ -78,5 +78,27 @@ class SectionRepository implements ISectionRepository {
     }
 
     return errorDTO;
+  }
+
+  @override
+  void add(SectionDTO model) {
+    sectionDTOs?.add(model);
+  }
+
+  @override
+  void delete(int id) {
+    sectionDTOs?.removeWhere((element) => id == element.id);
+  }
+
+  @override
+  Stream<QuerySnapshot<Object?>> get() {
+    // TODO: implement getSections
+    throw UnimplementedError();
+  }
+
+  @override
+  void update(int id, SectionDTO dto) {
+    // TODO: implement updateSection
+    throw UnimplementedError();
   }
 }
