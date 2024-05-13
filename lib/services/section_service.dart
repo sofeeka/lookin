@@ -1,32 +1,31 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:lookin_empat/repositories/i_section_repository.dart';
-import 'package:lookin_empat/repositories/section_repository.dart';
 import 'package:lookin_empat/services/i_section_service.dart';
+import '../models/section_dto.dart';
 import '../widgets/section_widget.dart';
 
-class SectionService implements ISectionService{
-  final ISectionRepository _sectionRepository;
-
-  SectionService(this._sectionRepository);
+class SectionService implements ISectionService {
+  SectionService();
 
   @override
-  List<SectionWidget> getSections({
+  List<SectionWidget> getSectionWidgets({
+    required List<QueryDocumentSnapshot<SectionDTO>> json,
     required double width,
     bool onPressedActive = false,
     Function(int)? onPressed,
   }) {
 
-    if (HardCodedSectionRepository.sectionDTOs == null) {
-      _sectionRepository.initialiseSections();
-    }
+    List<SectionDTO> dtos = json.map((item) => item.data()).toList();
 
-    return HardCodedSectionRepository.sectionDTOs!
-        .map(
-          (dto) => SectionWidget(
-            sectionDTO: dto,
-            onPressed: onPressed ?? (i) => {},
-            width: width,
-          ),
-        )
+    List<SectionWidget> sections = dtos
+        .map((dto) => SectionWidget(
+              onPressed: onPressed ?? (i) => {},
+              sectionDTO: dto,
+              width: width,
+            ))
         .toList();
+
+    return sections;
   }
 }

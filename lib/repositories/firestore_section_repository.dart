@@ -1,10 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lookin_empat/models/section_dto.dart';
 import 'package:lookin_empat/repositories/section_repository.dart';
 
+import '../models/logger.dart';
+import '../widgets/section_widget.dart';
 import 'i_section_repository.dart';
 
-class FirestoreSectionRepository implements ISectionRepository{
+class FirestoreSectionRepository implements ISectionRepository {
   static const FIREBASE_TABLE_REF = "sections";
 
   final _firestore = FirebaseFirestore.instance;
@@ -20,13 +23,18 @@ class FirestoreSectionRepository implements ISectionRepository{
   }
 
   @override
-  Stream<QuerySnapshot> get() {
-    return _collectionRef.snapshots();
+  Future<QuerySnapshot> getAll() async {
+    return await _collectionRef.get();
   }
 
   @override
   void add(SectionDTO model) async {
-    _collectionRef.add(model);
+    final CollectionReference localCollectionRef =
+        _firestore.collection(FIREBASE_TABLE_REF);
+
+    Map<String, dynamic> modelData = model.toJson();
+    await localCollectionRef.doc(model.id.toString()).set(modelData);
+    // _collectionRef.add(model);
   }
 
   @override
@@ -49,7 +57,7 @@ class FirestoreSectionRepository implements ISectionRepository{
         return null;
       }
     } catch (error) {
-      print('Error fetching SectionDTO by ID: $error');
+      Logger.log('Error fetching SectionDTO by ID: $error');
       return null;
     }
   }
@@ -57,14 +65,16 @@ class FirestoreSectionRepository implements ISectionRepository{
   @override
   Future<SectionDTO?> getByIndex(int index) async {
     try {
-      var querySnapshot = await _collectionRef.orderBy('id').limit(index + 1).get();
+      var querySnapshot =
+          await _collectionRef.orderBy('id').limit(index + 1).get();
       if (querySnapshot.size > index) {
-        return SectionDTO.fromJson(querySnapshot.docs[index].data() as Map<String, Object?>);
+        return SectionDTO.fromJson(
+            querySnapshot.docs[index].data() as Map<String, Object?>);
       } else {
         return null;
       }
     } catch (error) {
-      print('Error fetching SectionDTO by index: $error');
+      Logger.log('Error fetching SectionDTO by index: $error');
       return null;
     }
   }
@@ -74,7 +84,7 @@ class FirestoreSectionRepository implements ISectionRepository{
     final rep = HardCodedSectionRepository();
 
     var sections = rep.initialiseSections();
-    for(SectionDTO section in sections) {
+    for (SectionDTO section in sections) {
       add(section);
     }
 

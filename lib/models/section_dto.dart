@@ -12,12 +12,12 @@ class SectionDTO {
   }
 
   //todo optional add iconData
-  SectionDTO.fromJson(Map<String, Object?> json)
+  SectionDTO.fromJson(Map<String, dynamic> json)
       : this(
           id: json['id']! as int,
           name: json['name']! as String,
           color: Color(json['color']! as int),
-          svgIconPath: json['svgIconPath']! as String,
+          svgIconPath: (json['svgIconPath'] ?? '') as String,
         );
 
   SectionDTO copyWith({
@@ -36,7 +36,7 @@ class SectionDTO {
   }
 
   //todo optional add iconData
-  Map<String, Object?> toJson() {
+  Map<String, dynamic> toJson() {
     return {
       'id': id,
       'name': name,

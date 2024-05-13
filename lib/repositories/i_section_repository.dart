@@ -5,7 +5,7 @@ import '../models/section_dto.dart';
 abstract class ISectionRepository {
 
   void add(SectionDTO model);
-  Stream<QuerySnapshot> get();
+  Future<QuerySnapshot> getAll();
   void update(int id, SectionDTO model);
   void delete(int id);
 

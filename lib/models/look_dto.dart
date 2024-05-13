@@ -1,7 +1,6 @@
 import 'item_dto.dart';
 
 class LookDTO {
-
   LookDTO({
     required this.id,
     required this.userId,
@@ -9,7 +8,7 @@ class LookDTO {
     required this.items,
   });
 
-  factory LookDTO.fromJson(Map<String, Object?> json) {
+  factory LookDTO.fromJson(Map<String, dynamic> json) {
     var itemsJson = json['items'] as List<dynamic>;
     List<ItemDTO> items =
         itemsJson.map((itemJson) => ItemDTO.fromJson(itemJson)).toList();
@@ -36,7 +35,7 @@ class LookDTO {
     );
   }
 
-  Map<String, Object?> toJson() {
+  Map<String, dynamic> toJson() {
     List<Map<String, Object?>> itemsJson =
         items.map((item) => item.toJson()).toList();
 
