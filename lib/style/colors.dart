@@ -32,4 +32,14 @@ abstract class CColors {
   static const white = Color(0xffFFFFFF);
   static const black = Color(0xff1c1c1c);
   static const grey = Colors.grey;
+  static const red = Color(0xffe57373);
+  static const orange = Color(0xffffb74d);
+  static const yellow = Color(0xffffd54f);
+  static const green = Color(0xff81c784);
+  static const teal = Color(0xff4db6ac);
+  static const blue = Color(0xff64b5f6);
+  static const indigo = Color(0xff7986cb);
+  static const purple = Color(0xff9575cd);
+  static const pink = Color(0xfff06292);
+  static const brown = Color(0xffa1887f);
 }
