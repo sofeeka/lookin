@@ -32,6 +32,8 @@ class LookInTheme {
       selectedItemColor: CColors.lightSelectedItemColor,
       unselectedItemColor: CColors.lightUnselectedItemColor,
     ),
+    dialogBackgroundColor: CColors.lightSurfaceColor,
+    errorColor: CColors.lightErrorColor,
   );
 
   static ThemeData darkTheme = ThemeData(
@@ -62,5 +64,7 @@ class LookInTheme {
       selectedItemColor: CColors.darkSelectedItemColor,
       unselectedItemColor: CColors.darkUnselectedItemColor,
     ),
+    dialogBackgroundColor: CColors.darkSurfaceColor,
+    errorColor: CColors.darkErrorColor,
   );
 }
