@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:lookin_empat/base_app_bar.dart';
 import 'package:lookin_empat/models/section_dto.dart';
 import 'package:lookin_empat/repositories/firestore_section_repository.dart';
-import 'package:lookin_empat/screens/sections_screen.dart';
+import 'package:lookin_empat/screens/choose_section_screen.dart';
+import 'package:lookin_empat/screens/nav_bar_screens/edit_sections_screen.dart';
 import 'package:lookin_empat/widgets/error_dialog.dart';
 
-import '../widgets/scrollable_section_widget.dart';
+import '../../widgets/scrollable_section_widget.dart';
 
 class AddNewLookScreen extends StatefulWidget {
   const AddNewLookScreen({super.key});
@@ -45,9 +46,11 @@ class _AddNewLookScreenState extends State<AddNewLookScreen> {
         onRightWidgetPressed: () => {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => SectionsScreen(
+              builder: (context) => ChooseSectionScreen(
+                key: UniqueKey(),
                 leftAppBarWidget: GestureDetector(
-                  child: Icon( // todo change icon
+                  child: Icon(
+                    // todo change icon
                     Icons.arrow_back,
                     color: Theme.of(context).iconTheme.color,
                   ),
@@ -56,7 +59,7 @@ class _AddNewLookScreenState extends State<AddNewLookScreen> {
                   },
                 ),
                 onPressedActive: true,
-                onSectionPressed: (id) async {
+                onSectionPressed: (context, id) async {
                   if (!(await addNewSection(id))) {
                     ErrorDialog.show(
                       context: context,

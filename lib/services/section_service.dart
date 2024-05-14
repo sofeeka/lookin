@@ -13,14 +13,14 @@ class SectionService implements ISectionService {
     required List<QueryDocumentSnapshot<SectionDTO>> json,
     required double width,
     bool onPressedActive = false,
-    Function(int)? onPressed,
+    Function(BuildContext, int)? onPressed,
   }) {
 
     List<SectionDTO> dtos = json.map((item) => item.data()).toList();
 
     List<SectionWidget> sections = dtos
         .map((dto) => SectionWidget(
-              onPressed: onPressed ?? (i) => {},
+              onPressed: onPressed ?? (c, i) => {},
               sectionDTO: dto,
               width: width,
             ))

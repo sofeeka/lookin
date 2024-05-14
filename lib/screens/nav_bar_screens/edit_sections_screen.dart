@@ -6,33 +6,26 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lookin_empat/style/colors.dart';
 
-import '../base_app_bar.dart';
-import '../models/logger.dart';
-import '../models/section_dto.dart';
-import '../repositories/firestore_section_repository.dart';
-import '../repositories/i_section_repository.dart';
-import '../services/i_section_service.dart';
-import '../services/section_service.dart';
-import '../widgets/error_dialog.dart';
-import '../widgets/section_widget.dart';
+import '../../base_app_bar.dart';
+import '../../models/section_dto.dart';
+import '../../repositories/firestore_section_repository.dart';
+import '../../repositories/i_section_repository.dart';
+import '../../services/i_section_service.dart';
+import '../../services/section_service.dart';
+import '../../widgets/error_dialog.dart';
+import '../../widgets/section_user_photos.dart';
+import '../../widgets/section_widget.dart';
 
-class SectionsScreen extends StatefulWidget {
-  const SectionsScreen({
+class EditSectionsScreen extends StatefulWidget {
+  const EditSectionsScreen({
     super.key,
-    this.onPressedActive = false,
-    this.onSectionPressed,
-    this.leftAppBarWidget,
   });
 
-  final bool onPressedActive;
-  final Function(int)? onSectionPressed;
-  final Widget? leftAppBarWidget;
-
   @override
-  _SectionsScreenState createState() => _SectionsScreenState();
+  _EditSectionsScreenState createState() => _EditSectionsScreenState();
 }
 
-class _SectionsScreenState extends State<SectionsScreen> {
+class _EditSectionsScreenState extends State<EditSectionsScreen> {
   static const CROSS_AXIS_COUNT = 3;
   late ISectionService sectionService;
   late ISectionRepository sectionRepository;
@@ -51,9 +44,7 @@ class _SectionsScreenState extends State<SectionsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: BaseAppBar(
-          leftWidget: widget.leftAppBarWidget,
-          onRightWidgetPressed: openSectionBox),
+      appBar: BaseAppBar(onRightWidgetPressed: openSectionBox),
       body: FutureBuilder<QuerySnapshot>(
         future: sectionRepository.getAll(),
         builder: (context, snapshot) {
@@ -69,15 +60,19 @@ class _SectionsScreenState extends State<SectionsScreen> {
           } else {
             return buildSectionsGrid(
               sectionService.getSectionWidgets(
-                    json: snapshot.data!.docs
-                        as List<QueryDocumentSnapshot<SectionDTO>>,
-                    width: MediaQuery.of(context).size.width /
-                        (CROSS_AXIS_COUNT + 1),
-                    onPressed: widget.onPressedActive
-                        ? widget.onSectionPressed
-                        : (i) => Logger.log("default onPressed, id: $i"),
-                  ) ??
-                  [],
+                json: snapshot.data!.docs
+                    as List<QueryDocumentSnapshot<SectionDTO>>,
+                width:
+                    MediaQuery.of(context).size.width / (CROSS_AXIS_COUNT + 1),
+                onPressed: (BuildContext context, int id) {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          SectionUserPhotos(sectionId: id),
+                    ),
+                  );
+                },
+              ),
             );
           }
         },
@@ -118,7 +113,6 @@ class _SectionsScreenState extends State<SectionsScreen> {
   }
 
   void openSectionBox() async {
-
     // 5 first ids for basic hardcoded sections
     // in /lib/repositories/hardcoded_section_repository.dart
     // used to init when user presses light-bulb button
@@ -142,7 +136,10 @@ class _SectionsScreenState extends State<SectionsScreen> {
             Center(
               child: Text(
                 "Category",
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w900),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyLarge
+                    ?.copyWith(fontWeight: FontWeight.w900),
               ),
             ),
             Column(
@@ -166,8 +163,7 @@ class _SectionsScreenState extends State<SectionsScreen> {
                     ),
                     IconButton(
                       icon: const Icon(Icons.assignment_late_outlined),
-                      onPressed: () {
-                      },
+                      onPressed: () {},
                     ),
                   ],
                 ),

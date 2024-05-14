@@ -1,13 +1,16 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:lookin_empat/custom_bottom_navigation_bar.dart';
-import 'package:lookin_empat/screens/add_new_look_screen.dart';
 import 'package:lookin_empat/screens/auth/widget_tree.dart';
-import 'package:lookin_empat/screens/feed_screen.dart';
-import 'package:lookin_empat/screens/liked_looks_screen.dart';
-import 'package:lookin_empat/screens/profile_screen.dart';
-import 'package:lookin_empat/screens/sections_screen.dart';
+import 'package:lookin_empat/screens/nav_bar_screens/add_new_look_screen.dart';
+import 'package:lookin_empat/screens/nav_bar_screens/feed_screen.dart';
+import 'package:lookin_empat/screens/nav_bar_screens/liked_looks_screen.dart';
+import 'package:lookin_empat/screens/nav_bar_screens/profile_screen.dart';
+import 'package:lookin_empat/screens/nav_bar_screens/edit_sections_screen.dart';
 import 'package:lookin_empat/style/theme.dart';
+import 'package:lookin_empat/widgets/section_user_photos.dart';
+
+import 'models/logger.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,13 +28,19 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   int _currentIndex = 0;
 
-  final List<Widget> screens = [
-    const FeedScreen(),
-    SectionsScreen(),
-    const AddNewLookScreen(),
-    const SavedLooksScreen(),
-    ProfileScreen(),
-  ];
+  late final List<Widget> screens;
+
+  @override
+  void initState() {
+    screens = [
+      const FeedScreen(),
+      EditSectionsScreen(key: UniqueKey()),
+      const AddNewLookScreen(),
+      const SavedLooksScreen(),
+      const ProfileScreen(),
+    ];
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

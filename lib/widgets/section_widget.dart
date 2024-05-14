@@ -12,7 +12,7 @@ class SectionWidget extends StatelessWidget {
   });
 
   final SectionDTO sectionDTO;
-  final Function(int) onPressed;
+  final Function(BuildContext, int) onPressed;
   final bool? onPressedActive;
   final double width;
 
@@ -36,7 +36,7 @@ class SectionWidget extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        onPressed(sectionDTO.id);
+        onPressed(context, sectionDTO.id);
       },
       child: SizedBox(
         width: width,
