@@ -47,7 +47,7 @@ class FirestoreSectionRepository implements ISectionRepository {
   @override
   Future<SectionDTO?> getByID(int id) async {
     try {
-      var docSnapshot = await _collectionRef.doc(id.toString()).get();
+      var docSnapshot = await _firestore.collection(FIREBASE_TABLE_REF).doc(id.toString()).get();
       if (docSnapshot.exists) {
         return SectionDTO.fromJson(docSnapshot.data()! as Map<String, Object?>);
       } else {
