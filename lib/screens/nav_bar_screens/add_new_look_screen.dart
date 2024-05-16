@@ -9,7 +9,12 @@ import '../../models/logger.dart';
 import '../../widgets/scrollable_section_widget.dart';
 
 class AddNewLookScreen extends StatefulWidget {
-  const AddNewLookScreen({super.key});
+  const AddNewLookScreen({
+    super.key,
+    required this.firestoreSectionRepository,
+  });
+
+  final FirestoreSectionRepository firestoreSectionRepository;
 
   @override
   State<AddNewLookScreen> createState() => _AddNewLookScreenState();
@@ -17,17 +22,15 @@ class AddNewLookScreen extends StatefulWidget {
 
 class _AddNewLookScreenState extends State<AddNewLookScreen> {
   late List<ScrollableSectionWidget> clothingSections;
-  late FirestoreSectionRepository firestoreSectionRepository;
 
   @override
   void initState() {
     clothingSections = [];
-    firestoreSectionRepository = FirestoreSectionRepository();
     super.initState();
   }
 
   Future<bool> addNewSection(BuildContext context, int id) async {
-    SectionDTO? sectionDTO = await firestoreSectionRepository.getByID(id);
+    SectionDTO? sectionDTO = await widget.firestoreSectionRepository.getByID(id);
 
     if (sectionDTO == null) {
       return false;
@@ -37,7 +40,7 @@ class _AddNewLookScreenState extends State<AddNewLookScreen> {
       clothingSections.add(
         ScrollableSectionWidget(
           sectionDTO: sectionDTO,
-          firestoreSectionRepository: firestoreSectionRepository,
+          firestoreSectionRepository: widget.firestoreSectionRepository,
         ),
       );
     });
