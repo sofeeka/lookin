@@ -43,11 +43,11 @@ class FirestoreItemRepository implements IItemRepository {
   }
 
   @override
-  Future<List<ItemDTO>?> getByUserId(int id) async {
+  Future<List<ItemDTO>?> getByUserId(String userId) async {
     try {
       var querySnapshot = await _firestore
           .collection(FIREBASE_TABLE_REF)
-          .where('userId', isEqualTo: id)
+          .where('userId', isEqualTo: userId)
           .get();
 
       if (querySnapshot.docs.isNotEmpty) {
