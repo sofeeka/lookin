@@ -23,6 +23,8 @@ class ItemService implements IItemService {
   @override
   List<ClothingItemWidget> getClothingItemWidgets({
     required List<QueryDocumentSnapshot<ItemDTO>> json,
+    required double width,
+    required double height,
   }) {
     List<ItemDTO> dtos = json.map((item) => item.data()).toList();
 
@@ -31,6 +33,8 @@ class ItemService implements IItemService {
               sectionId: dto.id,
               itemDTO: dto,
               firestoreItemRepository: firestoreItemRepository,
+              width: width,
+              height: height,
             ))
         .toList();
 

@@ -45,11 +45,12 @@ class ScrollableSectionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //todo take items from database with id sectionDto.id
+    double height = 400;
+    double width = 500;
 
     return SizedBox(
-      height: 200,
-      width: 500,
+      height: height,
+      width: width,
       child: GestureDetector(
         onHorizontalDragEnd: (details) {
           if (details.velocity.pixelsPerSecond.dx > 0) {
@@ -85,9 +86,16 @@ class ScrollableSectionWidget extends StatelessWidget {
               } else if (!snapshot.hasData || snapshot.data == null) {
                 return const Text('No items found');
               } else {
-                return buildItemsScrollView(itemService.getClothingItemWidgets(
+                return buildItemsScrollView(
+                  width: width,
+                  height: height,
+                  sections: itemService.getClothingItemWidgets(
                     json: snapshot.data!.docs
-                        as List<QueryDocumentSnapshot<ItemDTO>>));
+                        as List<QueryDocumentSnapshot<ItemDTO>>,
+                    height: height,
+                    width: width,
+                  ),
+                );
               }
             },
           ),
@@ -97,15 +105,19 @@ class ScrollableSectionWidget extends StatelessWidget {
   }
 
   //todo
-  Widget buildItemsScrollView(List<ClothingItemWidget> sections) {
+  Widget buildItemsScrollView({
+    required List<ClothingItemWidget> sections,
+    required double width,
+    required double height,
+  }) {
     return SizedBox(
-      height: 400,
+      height: height,
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
           children: List.generate(
-            sections.length,
-            (index) => sections[index],
+            sections.length * 5,
+            (index) => sections[index % sections.length],
           ),
         ),
       ),

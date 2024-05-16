@@ -6,5 +6,7 @@ import '../widgets/clothing_item_widget.dart';
 abstract class IItemService {
   List<ClothingItemWidget> getClothingItemWidgets({
     required List<QueryDocumentSnapshot<ItemDTO>> json,
+    required double width,
+    required double height,
   });
 }

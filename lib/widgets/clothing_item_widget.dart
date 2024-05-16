@@ -12,21 +12,22 @@ class ClothingItemWidget extends StatelessWidget {
     required this.sectionId,
     required this.itemDTO,
     required this.firestoreItemRepository,
+    required this.width,
+    required this.height,
   }) : super(key: key);
 
   final int sectionId;
   final ItemDTO itemDTO;
   final FirestoreItemRepository firestoreItemRepository;
+  final double width;
+  final double height;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-        color: CColors.green,
-      ),
       child: SizedBox(
-        height: 100,
-        width: 100,
+        height: height,
+        width: width,
         child: Image.network(itemDTO.imagePath),
       ),
     );
