@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:lookin_empat/style/colors.dart';
 
 import '../base_app_bar.dart';
@@ -13,7 +12,6 @@ import '../models/section_dto.dart';
 import '../repositories/firestore_section_repository.dart';
 import '../repositories/i_section_repository.dart';
 import '../services/i_section_service.dart';
-import '../services/section_service.dart';
 import '../widgets/error_dialog.dart';
 import '../widgets/section_widget.dart';
 

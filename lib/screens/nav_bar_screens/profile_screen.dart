@@ -10,7 +10,7 @@ import 'package:lookin_empat/services/pick_avatar.dart';
 import 'package:lookin_empat/style/colors.dart';
 
 class ProfileScreen extends StatefulWidget {
-  ProfileScreen({Key? key}) : super(key: key);
+  const ProfileScreen({super.key});
 
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
