@@ -9,6 +9,7 @@ import 'package:lookin_empat/screens/nav_bar_screens/feed_screen.dart';
 import 'package:lookin_empat/screens/nav_bar_screens/liked_looks_screen.dart';
 import 'package:lookin_empat/screens/nav_bar_screens/profile_screen.dart';
 import 'package:lookin_empat/screens/nav_bar_screens/edit_sections_screen.dart';
+import 'package:lookin_empat/services/item_service.dart';
 import 'package:lookin_empat/style/theme.dart';
 
 Future<void> main() async {
@@ -30,15 +31,21 @@ class _MyAppState extends State<MyApp> {
   late final List<Widget> screens;
   late final FirestoreSectionRepository fsr;
   late final FirestoreItemRepository fir;
+  late final ItemService its;
 
   @override
   void initState() {
     fsr = FirestoreSectionRepository();
     fir = FirestoreItemRepository();
+    its = ItemService(
+      firestoreItemRepository: fir,
+      firestoreSectionRepository: fsr,
+    );
     screens = [
       const FeedScreen(),
       EditSectionsScreen(firestoreSectionRepository: fsr),
       AddNewLookScreen(
+        itemService: its,
         firestoreSectionRepository: fsr,
         firestoreItemRepository: fir,
       ),

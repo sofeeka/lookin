@@ -1,48 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:lookin_empat/models/section_dto.dart';
 import 'package:lookin_empat/repositories/firestore_item_repository.dart';
-import 'package:lookin_empat/repositories/firestore_section_repository.dart';
+
+import '../style/colors.dart';
 
 class ClothingItemWidget extends StatelessWidget {
   const ClothingItemWidget({
     super.key,
     required this.sectionId,
-    required this.firestoreSectionRepository,
     required this.firestoreItemRepository,
   });
 
   final int sectionId;
-  final FirestoreSectionRepository firestoreSectionRepository;
   final FirestoreItemRepository firestoreItemRepository;
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<SectionDTO?>(
-      future: firestoreSectionRepository.getByID(sectionId),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        } else if (snapshot.hasError) {
-          return const Text('Error loading section data');
-        } else if (!snapshot.hasData || snapshot.data == null) {
-          return const Text('Section not found');
-        } else {
-          final sectionDTO = snapshot.data!;
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 31, vertical: 16),
-            child: Container(
-              width: 150,
-              height: 300,
-              margin: const EdgeInsets.symmetric(horizontal: 10),
-              color: sectionDTO.color,
-              alignment: Alignment.center,
-              child: Text(sectionDTO.name),
-            ),
-          );
-        }
-      },
+    return Container(
+      decoration: const BoxDecoration(
+        color: CColors.green,
+      ),
+      child: SizedBox(
+        height: 100,
+        width: 100,
+        child: Text("$sectionId"),
+      ),
     );
   }
 }

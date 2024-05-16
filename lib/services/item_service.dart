@@ -4,6 +4,7 @@ import 'package:lookin_empat/models/item_dto.dart';
 import 'package:lookin_empat/repositories/firestore_section_repository.dart';
 import 'package:lookin_empat/repositories/i_section_repository.dart';
 import 'package:lookin_empat/services/i_section_service.dart';
+import 'package:lookin_empat/widgets/clothing_item_widget.dart';
 import 'package:lookin_empat/widgets/scrollable_section_widget.dart';
 import '../models/section_dto.dart';
 import '../repositories/firestore_item_repository.dart';
@@ -20,20 +21,18 @@ class ItemService implements IItemService {
   final FirestoreSectionRepository firestoreSectionRepository;
 
   @override
-  List<ScrollableSectionWidget> getScrollableSectionWidgets({
+  List<ClothingItemWidget> getClothingItemWidgets({
     required List<QueryDocumentSnapshot<ItemDTO>> json,
-    required double width,
   }) {
     List<ItemDTO> dtos = json.map((item) => item.data()).toList();
 
-    List<ScrollableSectionWidget> sections = dtos
-        .map((dto) => ScrollableSectionWidget(
+    List<ClothingItemWidget> items = dtos
+        .map((dto) => ClothingItemWidget(
               sectionId: dto.id,
-              firestoreSectionRepository: firestoreSectionRepository,
               firestoreItemRepository: firestoreItemRepository,
             ))
         .toList();
 
-    return sections;
+    return items;
   }
 }

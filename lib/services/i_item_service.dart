@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lookin_empat/models/item_dto.dart';
-import 'package:lookin_empat/widgets/scrollable_section_widget.dart';
+
+import '../widgets/clothing_item_widget.dart';
 
 abstract class IItemService {
-  List<ScrollableSectionWidget> getScrollableSectionWidgets({
+  List<ClothingItemWidget> getClothingItemWidgets({
     required List<QueryDocumentSnapshot<ItemDTO>> json,
-    required double width,
   });
 }

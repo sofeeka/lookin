@@ -1,7 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lookin_empat/models/section_dto.dart';
-import 'package:lookin_empat/repositories/firestore_section_repository.dart';
+import 'package:lookin_empat/models/item_dto.dart';
+import 'package:lookin_empat/services/item_service.dart';
 
 import '../models/logger.dart';
 import '../repositories/firestore_item_repository.dart';
@@ -34,80 +35,86 @@ class ScrollableSectionWidget extends StatelessWidget {
   const ScrollableSectionWidget({
     super.key,
     required this.sectionId,
-    required this.firestoreSectionRepository,
     required this.firestoreItemRepository,
+    required this.itemService,
   });
 
   final int sectionId;
-  final FirestoreSectionRepository firestoreSectionRepository;
   final FirestoreItemRepository firestoreItemRepository;
+  final ItemService itemService;
 
   @override
   Widget build(BuildContext context) {
     //todo take items from database with id sectionDto.id
-    List<ClothingItemWidget> items = [
-      ClothingItemWidget(
-        sectionId: sectionId,
-        firestoreSectionRepository: firestoreSectionRepository,
-        firestoreItemRepository: firestoreItemRepository,
-      ),
-      ClothingItemWidget(
-        sectionId: sectionId,
-        firestoreSectionRepository: firestoreSectionRepository,
-        firestoreItemRepository: firestoreItemRepository,
-      ),
-      ClothingItemWidget(
-        sectionId: sectionId,
-        firestoreSectionRepository: firestoreSectionRepository,
-        firestoreItemRepository: firestoreItemRepository,
-      ),
-      ClothingItemWidget(
-        sectionId: sectionId,
-        firestoreSectionRepository: firestoreSectionRepository,
-        firestoreItemRepository: firestoreItemRepository,
-      ),
-      ClothingItemWidget(
-        sectionId: sectionId,
-        firestoreSectionRepository: firestoreSectionRepository,
-        firestoreItemRepository: firestoreItemRepository,
-      ),
-    ];
 
-    return BlocProvider(
-      create: (_) => ScrollableSectionCubit(len: items.length, items: items),
-      child: BlocBuilder<ScrollableSectionCubit, int>(
-        builder: (context, currentIndex) {
-          return GestureDetector(
-            onHorizontalDragEnd: (details) {
-              if (details.velocity.pixelsPerSecond.dx > 0) {
-                // User swiped right
-                context
-                    .read<ScrollableSectionCubit>()
-                    .handleEvent(ScrollableSectionEvent.previous);
+    return SizedBox(
+      height: 200,
+      width: 500,
+      child: GestureDetector(
+        onHorizontalDragEnd: (details) {
+          if (details.velocity.pixelsPerSecond.dx > 0) {
+            // User swiped right
+            context
+                .read<ScrollableSectionCubit>()
+                .handleEvent(ScrollableSectionEvent.previous);
+          } else {
+            // User swiped left
+            context
+                .read<ScrollableSectionCubit>()
+                .handleEvent(ScrollableSectionEvent.next);
+          }
+        },
+        onTap: () {
+          // todo: show all items from the section
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 32,
+            vertical: 16,
+          ),
+          child: FutureBuilder<QuerySnapshot>(
+            future: firestoreItemRepository.getAll(),
+            //todo change to getBySectionID
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              } else if (!snapshot.hasData || snapshot.data == null) {
+                return const Text('No items found');
               } else {
-                // User swiped left
-                context
-                    .read<ScrollableSectionCubit>()
-                    .handleEvent(ScrollableSectionEvent.next);
+                return buildItemsScrollView(itemService.getClothingItemWidgets(
+                    json: snapshot.data!.docs
+                        as List<QueryDocumentSnapshot<ItemDTO>>));
               }
             },
-            onTap: () {
-              // todo: show all items from the section
-            },
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 32,
-                vertical: 16,
-              ),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: items,
-                ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  //todo
+  Widget buildItemsScrollView(List<ClothingItemWidget> sections) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
+      child: SizedBox(
+        height: 200, // Set a specific height
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: List.generate(
+              sections.length,
+              (index) => SizedBox(
+                  width: 400,
+                  height: 200,
+                  child: sections[index],
               ),
             ),
-          );
-        },
+          ),
+        ),
       ),
     );
   }

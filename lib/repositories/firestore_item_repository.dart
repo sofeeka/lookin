@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:lookin_empat/models/item_dto.dart';
 
 import '../models/logger.dart';
@@ -42,28 +43,31 @@ class FirestoreItemRepository implements IItemRepository {
     _collectionRef.doc(id.toString()).delete();
   }
 
-  @override
-  Future<List<ItemDTO>?> getByUserId(String userId) async {
-    try {
-      var querySnapshot = await _firestore
-          .collection(FIREBASE_TABLE_REF)
-          .where('userId', isEqualTo: userId)
-          .get();
-
-      if (querySnapshot.docs.isNotEmpty) {
-        List<ItemDTO> items = querySnapshot.docs.map((doc) {
-          return ItemDTO.fromJson(doc.data()! as Map<String, dynamic>);
-        }).toList();
-
-        return items;
-      } else {
-        return null;
-      }
-    } catch (error) {
-      Logger.log('Error fetching ItemDTO by userId: $error');
-      return null;
-    }
-  }
+  // @override
+  // Future<QuerySnapshot> getBySectionId(int sectionId) async {
+  //   String userId = FirebaseAuth.instance.currentUser!.uid;
+  //   try {
+  //     var querySnapshot = await _firestore
+  //         .collection(FIREBASE_TABLE_REF)
+  //         // .where('userId', isEqualTo: userId)
+  //         // .where('sectionId', isEqualTo: sectionId)
+  //         .get();
+  //
+  //     if (querySnapshot.docs.isNotEmpty) {
+  //       // List<ItemDTO> userItems = querySnapshot.docs.map((doc) {
+  //       //   return ItemDTO.fromJson(doc.data()! as Map<String, dynamic>);
+  //       // }).where((element) => element.sectionId == sectionId).toList();
+  //       //
+  //       // return userItems;
+  //       return querySnapshot;
+  //     } else {
+  //       return null;
+  //     }
+  //   } catch (error) {
+  //     Logger.log('Error fetching ItemDTO by userId: $error');
+  //     return null;
+  //   }
+  // }
 
   @override
   Future<ItemDTO?> getByIndex(int index) async {
