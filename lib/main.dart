@@ -8,9 +8,6 @@ import 'package:lookin_empat/screens/nav_bar_screens/liked_looks_screen.dart';
 import 'package:lookin_empat/screens/nav_bar_screens/profile_screen.dart';
 import 'package:lookin_empat/screens/nav_bar_screens/edit_sections_screen.dart';
 import 'package:lookin_empat/style/theme.dart';
-import 'package:lookin_empat/widgets/section_user_photos.dart';
-
-import 'models/logger.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,7 +32,7 @@ class _MyAppState extends State<MyApp> {
     screens = [
       const FeedScreen(),
       EditSectionsScreen(key: UniqueKey()),
-      const AddNewLookScreen(),
+      AddNewLookScreen(),
       const SavedLooksScreen(),
       const ProfileScreen(),
     ];
