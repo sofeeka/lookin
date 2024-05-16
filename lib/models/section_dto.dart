@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 class SectionDTO {
   SectionDTO({
     required this.id,
+    required this.userId,
     required this.name,
     required this.color,
     this.iconData,
@@ -18,6 +19,7 @@ class SectionDTO {
         isSVGPathValid(json['svgIconPath']) ? null : Icons.error;
     return SectionDTO(
       id: json['id']! as int,
+      userId: json['userId']! as String,
       name: json['name']! as String,
       color: Color(json['color']! as int),
       svgIconPath: (json['svgIconPath']) == null
@@ -29,6 +31,7 @@ class SectionDTO {
 
   SectionDTO copyWith({
     int? id,
+    String? userId,
     String? name,
     Color? color,
     IconData? iconData,
@@ -36,6 +39,7 @@ class SectionDTO {
   }) {
     return SectionDTO(
         id: id ?? this.id,
+        userId: userId ?? this.userId,
         name: name ?? this.name,
         color: color ?? this.color,
         iconData: iconData ?? this.iconData,
@@ -46,6 +50,7 @@ class SectionDTO {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'userId' : userId,
       'name': name,
       'color': color.value,
       'svgIconPath': svgIconPath,
@@ -53,6 +58,7 @@ class SectionDTO {
   }
 
   final int id;
+  final String userId;
   final Color color;
   final String name;
 

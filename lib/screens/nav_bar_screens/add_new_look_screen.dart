@@ -1,15 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:lookin_empat/base_app_bar.dart';
 import 'package:lookin_empat/models/section_dto.dart';
+import 'package:lookin_empat/repositories/firestore_item_repository.dart';
 import 'package:lookin_empat/repositories/firestore_section_repository.dart';
 import 'package:lookin_empat/screens/choose_section_screen.dart';
-import 'package:lookin_empat/screens/nav_bar_screens/edit_sections_screen.dart';
+import 'package:lookin_empat/services/item_service.dart';
 import 'package:lookin_empat/widgets/error_dialog.dart';
 
+import '../../models/logger.dart';
 import '../../widgets/scrollable_section_widget.dart';
 
 class AddNewLookScreen extends StatefulWidget {
-  const AddNewLookScreen({super.key});
+  const AddNewLookScreen({
+    super.key,
+    required this.firestoreSectionRepository,
+    required this.firestoreItemRepository,
+    required this.itemService,
+  });
+
+  final FirestoreSectionRepository firestoreSectionRepository;
+  final FirestoreItemRepository firestoreItemRepository;
+  final ItemService itemService;
 
   @override
   State<AddNewLookScreen> createState() => _AddNewLookScreenState();
@@ -18,25 +29,34 @@ class AddNewLookScreen extends StatefulWidget {
 class _AddNewLookScreenState extends State<AddNewLookScreen> {
   late List<ScrollableSectionWidget> clothingSections;
 
-  Future<bool> addNewSection(int id) async {
-    var frs = FirestoreSectionRepository();
-    SectionDTO? sectionDTO = await frs.getByID(id);
+  @override
+  void initState() {
+    clothingSections = [];
+    super.initState();
+  }
+
+  Future<bool> addNewSection(BuildContext context, int id) async {
+    SectionDTO? sectionDTO = await widget.firestoreSectionRepository.getByID(id);
 
     if (sectionDTO == null) {
       return false;
     }
 
     setState(() {
-      clothingSections.add(ScrollableSectionWidget(sectionDTO: sectionDTO));
+      clothingSections.add(
+        ScrollableSectionWidget(
+          sectionId: sectionDTO.id,
+          firestoreItemRepository: widget.firestoreItemRepository,
+          itemService: widget.itemService,
+        ),
+      );
     });
 
-    return true;
-  }
+    Logger.log(clothingSections.length.toString());
 
-  @override
-  void initState() {
-    clothingSections = [];
-    super.initState();
+    Navigator.of(context).pop();
+
+    return true;
   }
 
   @override
@@ -47,7 +67,6 @@ class _AddNewLookScreenState extends State<AddNewLookScreen> {
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => ChooseSectionScreen(
-                key: UniqueKey(),
                 leftAppBarWidget: GestureDetector(
                   child: Icon(
                     // todo change icon
@@ -60,13 +79,12 @@ class _AddNewLookScreenState extends State<AddNewLookScreen> {
                 ),
                 onPressedActive: true,
                 onSectionPressed: (context, id) async {
-                  if (!(await addNewSection(id))) {
-                    ErrorDialog.show(
+                  if (!(await addNewSection(context, id))) {
+                    show(
                       context: context,
                       errorMessage: "Could not add section with id: $id",
                     );
                   }
-                  Navigator.of(context).pop();
                 },
               ),
             ),
@@ -81,8 +99,26 @@ class _AddNewLookScreenState extends State<AddNewLookScreen> {
               ),
             )
           : ListView(
+              padding: const EdgeInsets.all(16),
               children: [...clothingSections],
             ),
     );
+  }
+
+  static void show({
+    required BuildContext context,
+    required String errorMessage,
+  }) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return ErrorDialog(
+          context: context,
+          errorMessage: errorMessage,
+        );
+      },
+    ).then((_) {
+      Navigator.of(context).pop();
+    });
   }
 }

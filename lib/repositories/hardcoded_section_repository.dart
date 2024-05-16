@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lookin_empat/repositories/i_section_repository.dart';
 import '../models/section_dto.dart';
@@ -12,40 +13,47 @@ class HardCodedSectionRepository /*implements ISectionRepository*/ {
 
   static SectionDTO errorDTO = SectionDTO(
     id: 0,
+    userId: 'no user',
     color: Colors.red,
-    name: "Error",
+    name: "error",
     iconData: Icons.error,
   );
 
   @override
   List<SectionDTO> initialiseSections() {
+    String userId = FirebaseAuth.instance.currentUser!.uid;
     sectionDTOs = [
       SectionDTO(
         id: staticIdCounter++,
+        userId: userId,
         color: CColors.yellow,
         name: 'T-shirts',
         svgIconPath: '${iconPathBase}t-shirt.svg',
       ),
       SectionDTO(
         id: staticIdCounter++,
+        userId: userId,
         color: CColors.green,
         name: 'Shorts',
         svgIconPath: '${iconPathBase}shorts.svg',
       ),
       SectionDTO(
         id: staticIdCounter++,
+        userId: userId,
         color: CColors.red,
         name: 'Caps',
         svgIconPath: '${iconPathBase}cap.svg',
       ),
       SectionDTO(
         id: staticIdCounter++,
+        userId: userId,
         color: CColors.blue,
         name: 'Beanies',
         svgIconPath: '${iconPathBase}beanie.svg',
       ),
       SectionDTO(
         id: staticIdCounter++,
+        userId: userId,
         color: CColors.teal,
         name: 'Blouses',
         svgIconPath: '${iconPathBase}blouse.svg',
