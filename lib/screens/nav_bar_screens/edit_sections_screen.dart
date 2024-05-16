@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/svg.dart';
@@ -19,7 +20,10 @@ import '../../widgets/section_widget.dart';
 class EditSectionsScreen extends StatefulWidget {
   const EditSectionsScreen({
     super.key,
+    required this.firestoreSectionRepository
   });
+
+  final firestoreSectionRepository;
 
   @override
   _EditSectionsScreenState createState() => _EditSectionsScreenState();
@@ -80,8 +84,7 @@ class _EditSectionsScreenState extends State<EditSectionsScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           setState(() {
-            var frs = FirestoreSectionRepository();
-            frs.initialiseSections();
+            widget.firestoreSectionRepository.initialiseSections();
           });
         },
         backgroundColor: Theme.of(context).colorScheme.surface,
@@ -181,6 +184,7 @@ class _EditSectionsScreenState extends State<EditSectionsScreen> {
                   onPressed: () {
                     SectionDTO section = SectionDTO(
                       id: newSectionId,
+                      userId: FirebaseAuth.instance.currentUser!.uid,
                       color: CColors.red, // Todo: Use color_picker
                       name: sectionNameController.text,
                       svgIconPath:
