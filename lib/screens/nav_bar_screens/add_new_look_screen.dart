@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lookin_empat/base_app_bar.dart';
 import 'package:lookin_empat/models/section_dto.dart';
+import 'package:lookin_empat/repositories/firestore_item_repository.dart';
 import 'package:lookin_empat/repositories/firestore_section_repository.dart';
 import 'package:lookin_empat/screens/choose_section_screen.dart';
 import 'package:lookin_empat/widgets/error_dialog.dart';
@@ -12,9 +13,11 @@ class AddNewLookScreen extends StatefulWidget {
   const AddNewLookScreen({
     super.key,
     required this.firestoreSectionRepository,
+    required this.firestoreItemRepository,
   });
 
   final FirestoreSectionRepository firestoreSectionRepository;
+  final FirestoreItemRepository firestoreItemRepository;
 
   @override
   State<AddNewLookScreen> createState() => _AddNewLookScreenState();
@@ -39,8 +42,9 @@ class _AddNewLookScreenState extends State<AddNewLookScreen> {
     setState(() {
       clothingSections.add(
         ScrollableSectionWidget(
-          sectionDTO: sectionDTO,
+          sectionId: sectionDTO.id,
           firestoreSectionRepository: widget.firestoreSectionRepository,
+          firestoreItemRepository: widget.firestoreItemRepository,
         ),
       );
     });

@@ -4,6 +4,7 @@ import 'package:lookin_empat/models/section_dto.dart';
 import 'package:lookin_empat/repositories/firestore_section_repository.dart';
 
 import '../models/logger.dart';
+import '../repositories/firestore_item_repository.dart';
 import 'clothing_item_widget.dart';
 
 enum ScrollableSectionEvent { next, previous }
@@ -32,36 +33,43 @@ class ScrollableSectionCubit extends Cubit<int> {
 class ScrollableSectionWidget extends StatelessWidget {
   const ScrollableSectionWidget({
     super.key,
-    required this.sectionDTO,
+    required this.sectionId,
     required this.firestoreSectionRepository,
+    required this.firestoreItemRepository,
   });
 
-  final SectionDTO sectionDTO;
+  final int sectionId;
   final FirestoreSectionRepository firestoreSectionRepository;
+  final FirestoreItemRepository firestoreItemRepository;
 
   @override
   Widget build(BuildContext context) {
     //todo take items from database with id sectionDto.id
     List<ClothingItemWidget> items = [
       ClothingItemWidget(
-        sectionId: 1,
+        sectionId: sectionId,
         firestoreSectionRepository: firestoreSectionRepository,
+        firestoreItemRepository: firestoreItemRepository,
       ),
       ClothingItemWidget(
-        sectionId: 2,
+        sectionId: sectionId,
         firestoreSectionRepository: firestoreSectionRepository,
+        firestoreItemRepository: firestoreItemRepository,
       ),
       ClothingItemWidget(
-        sectionId: 3,
+        sectionId: sectionId,
         firestoreSectionRepository: firestoreSectionRepository,
+        firestoreItemRepository: firestoreItemRepository,
       ),
       ClothingItemWidget(
-        sectionId: 4,
+        sectionId: sectionId,
         firestoreSectionRepository: firestoreSectionRepository,
+        firestoreItemRepository: firestoreItemRepository,
       ),
       ClothingItemWidget(
-        sectionId: 5,
+        sectionId: sectionId,
         firestoreSectionRepository: firestoreSectionRepository,
+        firestoreItemRepository: firestoreItemRepository,
       ),
     ];
 
@@ -94,17 +102,7 @@ class ScrollableSectionWidget extends StatelessWidget {
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
-                  children: List.generate(
-                    items.length,
-                    (index) => Container(
-                      width: 150,
-                      height: 400,
-                      margin: const EdgeInsets.symmetric(horizontal: 10),
-                      color: Colors.blue,
-                      alignment: Alignment.center,
-                      child: Text('Item ${items[index].sectionId}'),
-                    ),
-                  ),
+                  children: items,
                 ),
               ),
             ),

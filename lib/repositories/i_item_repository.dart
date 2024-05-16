@@ -9,7 +9,7 @@ abstract class IItemRepository {
   void update(int id, ItemDTO model);
   void delete(int id);
 
-  Future<ItemDTO?> getByID(int id);
+  Future<List<ItemDTO>?> getByUserId(int id);
   Future<ItemDTO?> getByIndex(int i);
   Future<int?> getMaxId();
 }

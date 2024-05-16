@@ -43,16 +43,24 @@ class FirestoreItemRepository implements IItemRepository {
   }
 
   @override
-  Future<ItemDTO?> getByID(int id) async {
+  Future<List<ItemDTO>?> getByUserId(int id) async {
     try {
-      var docSnapshot = await _firestore.collection(FIREBASE_TABLE_REF).doc(id.toString()).get();
-      if (docSnapshot.exists) {
-        return ItemDTO.fromJson(docSnapshot.data()! as Map<String, Object?>);
+      var querySnapshot = await _firestore
+          .collection(FIREBASE_TABLE_REF)
+          .where('userId', isEqualTo: id)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        List<ItemDTO> items = querySnapshot.docs.map((doc) {
+          return ItemDTO.fromJson(doc.data()! as Map<String, dynamic>);
+        }).toList();
+
+        return items;
       } else {
         return null;
       }
     } catch (error) {
-      Logger.log('Error fetching SectionDTO by ID: $error');
+      Logger.log('Error fetching ItemDTO by userId: $error');
       return null;
     }
   }

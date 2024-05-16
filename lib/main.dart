@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:lookin_empat/custom_bottom_navigation_bar.dart';
+import 'package:lookin_empat/repositories/firestore_item_repository.dart';
 import 'package:lookin_empat/repositories/firestore_section_repository.dart';
 import 'package:lookin_empat/screens/auth/widget_tree.dart';
 import 'package:lookin_empat/screens/nav_bar_screens/add_new_look_screen.dart';
@@ -28,14 +29,19 @@ class _MyAppState extends State<MyApp> {
 
   late final List<Widget> screens;
   late final FirestoreSectionRepository fsr;
+  late final FirestoreItemRepository fir;
 
   @override
   void initState() {
     fsr = FirestoreSectionRepository();
+    fir = FirestoreItemRepository();
     screens = [
       const FeedScreen(),
       EditSectionsScreen(firestoreSectionRepository: fsr),
-      AddNewLookScreen(firestoreSectionRepository: fsr),
+      AddNewLookScreen(
+        firestoreSectionRepository: fsr,
+        firestoreItemRepository: fir,
+      ),
       const SavedLooksScreen(),
       const ProfileScreen(),
     ];

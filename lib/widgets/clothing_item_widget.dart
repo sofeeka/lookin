@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:lookin_empat/models/section_dto.dart';
+import 'package:lookin_empat/repositories/firestore_item_repository.dart';
 import 'package:lookin_empat/repositories/firestore_section_repository.dart';
 
 class ClothingItemWidget extends StatelessWidget {
   const ClothingItemWidget({
-    Key? key,
+    super.key,
     required this.sectionId,
     required this.firestoreSectionRepository,
-  }) : super(key: key);
+    required this.firestoreItemRepository,
+  });
 
   final int sectionId;
   final FirestoreSectionRepository firestoreSectionRepository;
+  final FirestoreItemRepository firestoreItemRepository;
 
   @override
   Widget build(BuildContext context) {
