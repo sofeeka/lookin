@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lookin_empat/style/colors.dart';
 
 class CustomBottomNavigationBar extends StatelessWidget {
   final int selectedIndex;
@@ -15,6 +16,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CupertinoTabBar(
+      backgroundColor: CColors.screenLightGreyColor,
       currentIndex: selectedIndex,
       onTap: onDestinationSelected,
       items: [
@@ -61,9 +63,9 @@ class CustomBottomNavigationBar extends StatelessWidget {
         padding: const EdgeInsets.only(top: 8.0),
         child: SvgPicture.asset(
           iconPath,
-          color: isSelected ?
-          theme.bottomNavigationBarTheme.selectedItemColor :
-          theme.bottomNavigationBarTheme.unselectedItemColor,
+          color: isSelected
+              ? theme.bottomNavigationBarTheme.selectedItemColor
+              : theme.bottomNavigationBarTheme.unselectedItemColor,
         ),
       ),
     );

@@ -6,6 +6,7 @@ import 'package:lookin_empat/screens/feed_screen.dart';
 import 'package:lookin_empat/screens/liked_looks_screen.dart';
 import 'package:lookin_empat/screens/profile_screen.dart';
 import 'package:lookin_empat/screens/sections_screen.dart';
+import 'package:lookin_empat/style/colors.dart';
 import 'package:lookin_empat/style/theme.dart';
 
 import 'package:firebase_core/firebase_core.dart';
