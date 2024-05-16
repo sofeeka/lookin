@@ -39,8 +39,8 @@ class Auth {
     }
   }
 
-  Future<bool> createImageLink({
-    required String imageLink,
+  Future createImageLink({
+    required String? imageLink,
   }) async {
     CollectionReference users = FirebaseFirestore.instance.collection('images');
 
@@ -48,13 +48,16 @@ class Auth {
         await users.where('url', isEqualTo: imageLink).get();
 
     if (querySnapshot.docs.isNotEmpty) {
+      print('Query snapshot is not empty');
       return false;
     } else {
       try {
         if (currentUser != null) {
+          print('Current user is not null');
           await users.doc(currentUser?.uid).set({'url': imageLink});
           return true;
         } else {
+          print('Current user is null');
           return false;
         }
       } catch (e) {
