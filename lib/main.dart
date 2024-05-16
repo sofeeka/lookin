@@ -1,25 +1,31 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:lookin_empat/custom_bottom_navigation_bar.dart';
+import 'package:lookin_empat/screens/add_new_look_screen.dart';
 import 'package:lookin_empat/screens/auth/widget_tree.dart';
-import 'package:lookin_empat/screens/nav_bar_screens/add_new_look_screen.dart';
-import 'package:lookin_empat/screens/nav_bar_screens/feed_screen.dart';
-import 'package:lookin_empat/screens/nav_bar_screens/liked_looks_screen.dart';
-import 'package:lookin_empat/screens/nav_bar_screens/profile_screen.dart';
-import 'package:lookin_empat/screens/nav_bar_screens/edit_sections_screen.dart';
+import 'package:lookin_empat/screens/feed_screen.dart';
+import 'package:lookin_empat/screens/liked_looks_screen.dart';
+import 'package:lookin_empat/screens/profile_screen.dart';
+import 'package:lookin_empat/screens/sections_screen.dart';
 import 'package:lookin_empat/style/theme.dart';
-import 'package:lookin_empat/widgets/section_user_photos.dart';
 
-import 'models/logger.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  runApp(const WidgetTree());
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  runApp(const MaterialApp(
+    debugShowCheckedModeBanner: false,
+    home: WidgetTree(),
+  ));
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -28,38 +34,30 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   int _currentIndex = 0;
 
-  late final List<Widget> screens;
-
-  @override
-  void initState() {
-    screens = [
-      const FeedScreen(),
-      EditSectionsScreen(key: UniqueKey()),
-      const AddNewLookScreen(),
-      const SavedLooksScreen(),
-      const ProfileScreen(),
-    ];
-    super.initState();
-  }
+  final List<Widget> screens = [
+    const FeedScreen(),
+    const SectionsScreen(),
+    const AddNewLookScreen(),
+    const SavedLooksScreen(),
+    ProfileScreen(),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SafeArea(
-        child: Scaffold(
-          body: IndexedStack(
-            index: _currentIndex,
-            children: screens,
-          ),
-          bottomNavigationBar: CustomBottomNavigationBar(
-            selectedIndex: _currentIndex,
-            onDestinationSelected: (int index) {
-              setState(() {
-                _currentIndex = index;
-              });
-            },
-          ),
+      home: Scaffold(
+        body: IndexedStack(
+          index: _currentIndex,
+          children: screens,
+        ),
+        bottomNavigationBar: CustomBottomNavigationBar(
+          selectedIndex: _currentIndex,
+          onDestinationSelected: (int index) {
+            setState(() {
+              _currentIndex = index;
+            });
+          },
         ),
       ),
       theme: LookInTheme.lightTheme,
