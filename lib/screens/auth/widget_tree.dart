@@ -4,7 +4,6 @@ import 'package:lookin_empat/main.dart';
 import 'package:lookin_empat/screens/auth/launch_screen.dart';
 import 'package:lookin_empat/screens/auth/username_screen.dart';
 import 'package:lookin_empat/services/auth.dart';
-import 'package:lookin_empat/screens/auth/login_page.dart';
 
 class WidgetTree extends StatefulWidget {
   const WidgetTree({Key? key});

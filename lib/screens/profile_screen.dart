@@ -1,12 +1,10 @@
+import 'dart:async';
 import 'dart:io';
-import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:lookin_empat/services/auth.dart';
 import 'package:lookin_empat/services/pick_avatar.dart';
 import 'package:lookin_empat/style/colors.dart';
@@ -22,7 +20,40 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final User? user = Auth().currentUser;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  void selectImage() {}
+  XFile? selectedPhoto;
+  String? uploadedPhoto;
+  String? avatarFromFirebase;
+
+  void uploadPhoto() async {
+    String photo = await Avatar().uploadAvatar(selectedPhoto);
+
+    setState(() {
+      uploadedPhoto = photo;
+      print('Uploaded photo link: ${uploadedPhoto}');
+    });
+  }
+
+  void selectImage() async {
+    uploadPhoto();
+    XFile? avatar = await Avatar().pickImage(ImageSource.gallery);
+    if (uploadedPhoto != null) {
+      Auth().createImageLink(imageLink: uploadedPhoto);
+    }
+
+    setState(() {
+      selectedPhoto = avatar;
+    });
+  }
+
+  void setAvatarUrl() async {
+    avatarFromFirebase = getAvatar(user!.uid) as String?;
+  }
+
+  Future<String> getAvatar(String uid) async {
+    DocumentSnapshot userDoc =
+        await _firestore.collection('images').doc(uid).get();
+    return userDoc.exists ? userDoc['url'] : 'no avatar';
+  }
 
   Future<String> getUsername(String uid) async {
     DocumentSnapshot userDoc =
@@ -82,6 +113,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  Widget _avatar(XFile? avatar) {
+    return FutureBuilder(
+      future: getAvatar(user!.uid),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator();
+        } else {
+          if (avatar != null) {
+            return CircleAvatar(
+              radius: 60,
+              backgroundImage: FileImage(
+                File(avatar.path),
+              ),
+            );
+          } else {
+            if (snapshot.hasData) {
+              return CircleAvatar(
+                radius: 60,
+                backgroundImage: NetworkImage(snapshot.data!),
+              );
+            } else {
+              return const CircleAvatar(
+                radius: 60,
+                backgroundImage: NetworkImage(
+                    'https://firebasestorage.googleapis.com/v0/b/lookin-b9b19.appspot.com/o/profileImage%2Fimage_picker_182C4F98-3D21-4F3B-A24C-1DF41A5071C8-9984-000001054634B603.jpg?alt=media&token=5697b92b-657f-4816-a916-8fa3985f2925'),
+              );
+            }
+          }
+        }
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -98,11 +162,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const SizedBox(height: 10.0),
               Stack(
                 children: [
-                  const CircleAvatar(
-                    radius: 60,
-                    backgroundImage: NetworkImage(
-                        'https://firebasestorage.googleapis.com/v0/b/lookin-b9b19.appspot.com/o/profileImage%2Fimage_picker_182C4F98-3D21-4F3B-A24C-1DF41A5071C8-9984-000001054634B603.jpg?alt=media&token=5697b92b-657f-4816-a916-8fa3985f2925'),
-                  ),
+                  _avatar(selectedPhoto),
                   Positioned(
                     bottom: -10,
                     left: 80,
