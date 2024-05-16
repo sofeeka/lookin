@@ -54,7 +54,6 @@ class LaunchScreen extends StatelessWidget {
           const Spacer(),
           ElevatedButton(
             onPressed: () {
-              print('button pressed');
               Navigator.push(
                 context,
                 MaterialPageRoute(

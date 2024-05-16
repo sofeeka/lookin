@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:lookin_empat/main.dart';
+import 'package:lookin_empat/screens/auth/username_screen.dart';
 import 'package:lookin_empat/services/auth.dart';
 import 'package:lookin_empat/style/colors.dart';
 
@@ -24,10 +27,34 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> signInWithEmailAndPassword() async {
     try {
-      await Auth().signInWithEmailAndPassword(
+      bool success = await Auth().signInWithEmailAndPassword(
         email: _emailController.text,
         password: _passwordController.text,
       );
+      if (success) {
+        User? user = Auth().currentUser;
+        DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user?.uid)
+            .get();
+        if (userSnapshot.exists) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const MyApp(),
+            ),
+          );
+        } else {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const UsernamePage(),
+            ),
+          );
+        }
+      } else {
+        print("Not Success");
+      }
     } on FirebaseAuthException catch (e) {
       setState(() {
         errorMessage = e.message;
@@ -37,10 +64,18 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> createUserWithEmailAndPassword() async {
     try {
-      await Auth().createUserWithEmailAndPassword(
+      bool success = await Auth().createUserWithEmailAndPassword(
         email: _emailController.text,
         password: _passwordController.text,
       );
+      if (success) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const UsernamePage(),
+          ),
+        );
+      } else {}
     } on FirebaseAuthException catch (e) {
       setState(() {
         errorMessage = e.message;
@@ -64,7 +99,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _textField(BuildContext context, String labelText,
-      TextEditingController controller) {
+      TextEditingController controller, bool obscureText) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -84,6 +119,7 @@ class _LoginPageState extends State<LoginPage> {
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: TextField(
                       controller: controller,
+                      obscureText: obscureText,
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: labelText,
@@ -196,9 +232,9 @@ class _LoginPageState extends State<LoginPage> {
             _lookIn(),
             const Spacer(),
             _errorMessage(),
-            _textField(context, 'Email', _emailController),
+            _textField(context, 'Email', _emailController, false),
             const SizedBox(height: 10),
-            _textField(context, 'Password', _passwordController),
+            _textField(context, 'Password', _passwordController, true),
             const SizedBox(height: 10),
             _signInButton(
                 context,

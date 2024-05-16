@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class Auth {
@@ -7,24 +8,83 @@ class Auth {
 
   Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
 
-  Future<void> signInWithEmailAndPassword({
+  Future<bool> signInWithEmailAndPassword({
     required String email,
     required String password,
   }) async {
-    await _firebaseAuth.signInWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
+    try {
+      await _firebaseAuth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      return true;
+    } catch (e) {
+      print("Error signing in: $e");
+      return false;
+    }
   }
 
-  Future<void> createUserWithEmailAndPassword({
+  Future<bool> createUserWithEmailAndPassword({
     required String email,
     required String password,
   }) async {
-    await _firebaseAuth.createUserWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
+    try {
+      await _firebaseAuth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> createImageLink({
+    required String imageLink,
+  }) async {
+    CollectionReference users = FirebaseFirestore.instance.collection('images');
+
+    QuerySnapshot querySnapshot =
+        await users.where('url', isEqualTo: imageLink).get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      return false;
+    } else {
+      try {
+        if (currentUser != null) {
+          await users.doc(currentUser?.uid).set({'url': imageLink});
+          return true;
+        } else {
+          return false;
+        }
+      } catch (e) {
+        throw Exception('Error adding avatar: $e');
+      }
+    }
+  }
+
+  Future<bool> createUsername({
+    required String username,
+  }) async {
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
+
+    QuerySnapshot querySnapshot =
+        await users.where('username', isEqualTo: username).get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      return false;
+    } else {
+      try {
+        if (currentUser != null) {
+          await users.doc(currentUser?.uid).set({'username': username});
+          return true;
+        } else {
+          return false;
+        }
+      } catch (e) {
+        throw Exception('Error adding username: $e');
+      }
+    }
   }
 
   Future<void> signOut() async {
