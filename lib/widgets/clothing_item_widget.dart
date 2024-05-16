@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lookin_empat/models/item_dto.dart';
 import 'package:lookin_empat/repositories/firestore_item_repository.dart';
 
 import '../style/colors.dart';
@@ -7,10 +8,12 @@ class ClothingItemWidget extends StatelessWidget {
   const ClothingItemWidget({
     super.key,
     required this.sectionId,
+    required this.itemDTO,
     required this.firestoreItemRepository,
   });
 
   final int sectionId;
+  final ItemDTO itemDTO;
   final FirestoreItemRepository firestoreItemRepository;
 
   @override
@@ -22,7 +25,7 @@ class ClothingItemWidget extends StatelessWidget {
       child: SizedBox(
         height: 100,
         width: 100,
-        child: Text("$sectionId"),
+        child: Text(itemDTO.imagePath),
       ),
     );
   }

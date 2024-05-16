@@ -98,21 +98,14 @@ class ScrollableSectionWidget extends StatelessWidget {
 
   //todo
   Widget buildItemsScrollView(List<ClothingItemWidget> sections) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
-      child: SizedBox(
-        height: 200, // Set a specific height
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: List.generate(
-              sections.length,
-              (index) => SizedBox(
-                  width: 400,
-                  height: 200,
-                  child: sections[index],
-              ),
-            ),
+    return SizedBox(
+      height: 400,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: List.generate(
+            sections.length,
+            (index) => sections[index],
           ),
         ),
       ),

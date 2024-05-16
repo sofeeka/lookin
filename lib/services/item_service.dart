@@ -29,6 +29,7 @@ class ItemService implements IItemService {
     List<ClothingItemWidget> items = dtos
         .map((dto) => ClothingItemWidget(
               sectionId: dto.id,
+              itemDTO: dto,
               firestoreItemRepository: firestoreItemRepository,
             ))
         .toList();
